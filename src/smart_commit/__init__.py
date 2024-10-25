@@ -1,12 +1,13 @@
 import subprocess
 from fire import Fire
-from huggingface_hub import InferenceClient, login
-
+from huggingface_hub import InferenceClient
 
 def get_git_diff():
-    # Get the diff of staged Python files
+    """
+    Retrieves the git diff of staged changes.
+    """
     result = subprocess.run(
-        ['git', 'diff', '--cached', '--', '*.py'],
+        ['git', 'diff', '--cached'],
         capture_output=True, text=True
     )
     if result.returncode != 0:
@@ -14,42 +15,58 @@ def get_git_diff():
         return ''
     diff_output = result.stdout.strip()
     if not diff_output:
-        print("No staged Python files detected.")
+        print("No staged changes detected.")
         return ''
-
     return diff_output
 
-
 def generate_commit_message(diff_text, model_name, max_tokens=100):
+    """
+    Generates a commit message using the language model based on the git diff.
+    """
     client = InferenceClient()
 
-    # Construct the prompt with clearer instructions
+    # Construct the prompt similar to Andrej's script
+    prompt = (
+        "Below is a diff of all staged changes, coming from the command:\n\n"
+        "```\n"
+        "git diff --cached\n"
+        "```\n\n"
+        "Please generate a concise, one-line commit message for these changes."
+    )
+
+    # Include the diff in the user's message
     messages = [
-        {
-            "role": "system",
-            "content": (
-                "You are an AI assistant that writes concise and descriptive git commit messages based on code changes."
-                "Given the following git diff, generate a clear and concise commit message that accurately describes the changes."
-            )
-        },
-        {
-            "role": "user",
-            "content": f"Git diff:\n{diff_text}"
-        },
+        {"role": "user", "content": f"{prompt}\n\n{diff_text}"}
     ]
 
+    # Call the language model to generate the commit message
     chat_completion = client.chat.completions.create(
         model=model_name,
         messages=messages,
         max_tokens=max_tokens,
+        temperature=0.5,
+        top_p=1.0,
+        stop=None,
     )
+
+    # Return the generated commit message
     return chat_completion.choices[0].message.content.strip()
 
+def read_input(prompt):
+    """
+    Reads user input in a way that is compatible with both Python 2 and 3.
+    """
+    try:
+        # For Python 3
+        return input(prompt)
+    except NameError:
+        # For Python 2
+        return raw_input(prompt)
 
 def app(model="meta-llama/Llama-3.2-1B-Instruct", max_tokens=100):
-    # login to hf
-    login()
-
+    """
+    Main function that orchestrates the commit message generation and user interaction.
+    """
     diff_text = get_git_diff()
     if not diff_text:
         return
@@ -60,16 +77,49 @@ def app(model="meta-llama/Llama-3.2-1B-Instruct", max_tokens=100):
         print("Diff is too large; truncating to fit the model's input limits.")
         diff_text = diff_text[:max_diff_length]
 
-    commit_message = generate_commit_message(
-        diff_text, model_name=model, max_tokens=max_tokens
-    )
-    print("\nSuggested Commit Message:\n")
-    print(commit_message)
+    print("Generating AI-powered commit message...")
+    commit_message = generate_commit_message(diff_text, model_name=model, max_tokens=max_tokens)
 
+    while True:
+        print("\nProposed Commit Message:\n")
+        print(commit_message)
+
+        # Prompt the user for action
+        choice = read_input("\nDo you want to (a)ccept, (e)dit, (r)egenerate, or (c)ancel? ").strip().lower()
+
+        if choice == 'a':
+            # User accepts the commit message
+            if subprocess.call(['git', 'commit', '-m', commit_message]) == 0:
+                print("Changes committed successfully!")
+                return
+            else:
+                print("Commit failed. Please check your changes and try again.")
+                return
+        elif choice == 'e':
+            # User wants to edit the commit message
+            commit_message = read_input("Enter your commit message: ").strip()
+            if commit_message:
+                if subprocess.call(['git', 'commit', '-m', commit_message]) == 0:
+                    print("Changes committed successfully with your message!")
+                    return
+                else:
+                    print("Commit failed. Please check your message and try again.")
+                    return
+            else:
+                print("Commit message cannot be empty.")
+        elif choice == 'r':
+            # User wants to regenerate the commit message
+            print("Regenerating commit message...")
+            commit_message = generate_commit_message(diff_text, model_name=model, max_tokens=max_tokens)
+        elif choice == 'c':
+            # User cancels the operation
+            print("Commit cancelled.")
+            return
+        else:
+            print("Invalid choice. Please try again.")
 
 def main():
     Fire(app)
-
 
 if __name__ == "__main__":
     main()
