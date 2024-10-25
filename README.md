@@ -1,5 +1,7 @@
 ## Smart Commit
 
+![think hard!](./assets/git-diff.jpeg)
+
 A tool that creates smart commit messages using the `git diff`.
 
 ## Usage
@@ -28,3 +30,8 @@ This tool uses the `huggingface_hub.InferenceClient` API. So you can use all the
 the inference endpoints!
 
 To know more about inference endpoints please read the official [documentation](https://huggingface.co/docs/inference-endpoints/en/index).
+
+## References
+
+* [Andrej Karpathy's Tweet](https://x.com/karpathy/status/1827810695658029262)
+* [Andrej Karpathy's Gist](https://gist.github.com/karpathy/1dd0294ef9567971c1e4348a90d69285)
