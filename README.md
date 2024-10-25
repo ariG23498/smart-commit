@@ -1,6 +1,6 @@
 ## Smart Commit
 
-![think hard!](./assets/git-diff.jpeg)
+<img src="./assets/git-diff.jpeg" height=200 width=300></img>
 
 A tool that creates smart commit messages using the `git diff`.
 
