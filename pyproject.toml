@@ -1,0 +1,21 @@
+[project]
+name = "smart-commit"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "ariG23498", email = "aritra.born2fly@gmail.com" } 
+]
+requires-python = ">=3.9"
+dependencies = [
+    "fire>=0.7.0",
+    "huggingface-hub>=0.26.1",
+    "ruff>=0.7.1",
+]
+
+[project.scripts]
+smart-commit = "smart_commit:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
