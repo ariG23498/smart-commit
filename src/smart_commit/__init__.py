@@ -32,6 +32,7 @@ def generate_commit_message(diff_text, model_name, max_tokens=100):
         "git diff --cached\n"
         "```\n\n"
         "Please generate a concise, one-line commit message for these changes."
+        "Only ouput the one-line message with nothing else."
     )
 
     # Include the diff in the user's message
@@ -61,7 +62,7 @@ def read_input(prompt):
         # For Python 2
         return raw_input(prompt)
 
-def app(model="meta-llama/Llama-3.2-1B-Instruct", max_tokens=100):
+def app(model="meta-llama/Llama-3.2-3B-Instruct", max_tokens=100):
     """
     Main function that orchestrates the commit message generation and user interaction.
     """
