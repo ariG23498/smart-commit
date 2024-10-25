@@ -1,4 +1,4 @@
-## Smart Commit
+## Smart Commit Msg
 
 <img src="./assets/git-diff.jpeg" height=200 width=300></img>
 
@@ -9,26 +9,26 @@ A tool that creates smart commit messages using the `git diff`.
 Install the CLI
 
 ```sh
-$ pip install git+https://github.com/ariG23498/smart-commit
+$ pip install smart-commit-msg
 ```
 
 Go to a git repository
 
 ```sh
 $ git add .
-$ smart-commit
+$ smart-commit-msg
 ```
 
-Smart commit gives you a commit message based on the staged changes.
+Smart commit msg gives you a commit message based on the staged changes.
 
 ## Tool Help
 
 ```sh
 NAME
-    smart-commit - Main function that orchestrates the commit message generation and user interaction.
+    smart-commit-msg - Main function that orchestrates the commit message generation and user interaction.
 
 SYNOPSIS
-    smart-commit <flags>
+    smart-commit-msg <flags>
 
 DESCRIPTION
     Main function that orchestrates the commit message generation and user interaction.

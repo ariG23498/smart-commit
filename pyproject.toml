@@ -1,6 +1,6 @@
 [project]
 name = "smart-commit-msg"
-version = "0.1.0"
+version = "0.1.1"
 description = "Builds a smart commit message using LLMs"
 readme = "README.md"
 authors = [
