@@ -23,8 +23,6 @@ def get_git_diff():
 def generate_commit_message(diff_text, model_name, max_tokens=100):
     client = InferenceClient()
 
-    print(diff_text)
-
     # Construct the prompt with clearer instructions
     messages = [
         {
