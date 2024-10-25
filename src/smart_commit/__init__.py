@@ -1,3 +1,4 @@
+import os
 import subprocess
 from fire import Fire
 from huggingface_hub import InferenceClient
@@ -19,11 +20,13 @@ def get_git_diff():
         return ''
     return diff_output
 
-def generate_commit_message(diff_text, model_name, max_tokens=100):
+def generate_commit_message(diff_text, model_name, max_tokens=100, token=None):
     """
     Generates a commit message using the language model based on the git diff.
     """
-    client = InferenceClient()
+    # Use the provided token, or read from environment, or default to None
+    token = token or os.getenv("HF_TOKEN")
+    client = InferenceClient(token=token)
 
     # Construct the prompt similar to Andrej's script
     prompt = (
@@ -32,7 +35,7 @@ def generate_commit_message(diff_text, model_name, max_tokens=100):
         "git diff --cached\n"
         "```\n\n"
         "Please generate a concise, one-line commit message for these changes."
-        "Only ouput the one-line message with nothing else."
+        "Only output the one-line message with nothing else."
     )
 
     # Include the diff in the user's message
@@ -62,7 +65,7 @@ def read_input(prompt):
         # For Python 2
         return raw_input(prompt)
 
-def app(model="meta-llama/Llama-3.2-3B-Instruct", max_tokens=100):
+def app(model="meta-llama/Llama-3.2-3B-Instruct", max_tokens=100, token=None):
     """
     Main function that orchestrates the commit message generation and user interaction.
     """
@@ -77,7 +80,7 @@ def app(model="meta-llama/Llama-3.2-3B-Instruct", max_tokens=100):
         diff_text = diff_text[:max_diff_length]
 
     print("Generating AI-powered commit message...")
-    commit_message = generate_commit_message(diff_text, model_name=model, max_tokens=max_tokens)
+    commit_message = generate_commit_message(diff_text, model_name=model, max_tokens=max_tokens, token=token)
 
     while True:
         print("\nProposed Commit Message:\n")
@@ -109,7 +112,7 @@ def app(model="meta-llama/Llama-3.2-3B-Instruct", max_tokens=100):
         elif choice == 'r':
             # User wants to regenerate the commit message
             print("Regenerating commit message...")
-            commit_message = generate_commit_message(diff_text, model_name=model, max_tokens=max_tokens)
+            commit_message = generate_commit_message(diff_text, model_name=model, max_tokens=max_tokens, token=token)
         elif choice == 'c':
             # User cancels the operation
             print("Commit cancelled.")
