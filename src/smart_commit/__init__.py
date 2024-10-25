@@ -45,8 +45,6 @@ def generate_commit_message(diff_text, model_name, max_tokens=100):
         messages=messages,
         max_tokens=max_tokens,
         temperature=0.5,
-        top_p=1.0,
-        stop=None,
     )
 
     # Return the generated commit message
