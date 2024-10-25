@@ -21,6 +21,26 @@ $ smart-commit
 
 Smart commit gives you a commit message based on the staged changes.
 
+## Tool Help
+
+```sh
+NAME
+    smart-commit - Main function that orchestrates the commit message generation and user interaction.
+
+SYNOPSIS
+    smart-commit <flags>
+
+DESCRIPTION
+    Main function that orchestrates the commit message generation and user interaction.
+
+FLAGS
+    --model=MODEL
+        Default: 'meta-llama/Llama...
+    --max_tokens=MAX_TOKENS
+        Default: 100
+```
+
+
 ## Models
 
 This tool uses the `huggingface_hub.InferenceClient` API. So you can use all the models that support
