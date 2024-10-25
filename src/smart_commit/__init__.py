@@ -1,6 +1,6 @@
 import subprocess
 from fire import Fire
-from huggingface_hub import InferenceClient
+from huggingface_hub import InferenceClient, login
 
 
 def get_git_diff():
@@ -47,6 +47,9 @@ def generate_commit_message(diff_text, model_name, max_tokens=100):
 
 
 def app(model="meta-llama/Llama-3.2-1B-Instruct", max_tokens=100):
+    # login to hf
+    login()
+
     diff_text = get_git_diff()
     if not diff_text:
         return
