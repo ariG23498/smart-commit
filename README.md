@@ -6,7 +6,7 @@ A tool that creates smart commit messages using the `git diff`.
 
 Install the CLI
 
-``sh
+```sh
 $ pip install git+https://github.com/ariG23498/smart-commit
 ```
 
