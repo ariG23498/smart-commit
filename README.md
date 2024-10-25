@@ -21,9 +21,6 @@ $ smart-commit
 
 Smart commit gives you a commit message based on the staged changes.
 
-> Note
-This only takes care of the python file changes for now.
-
 ## Models
 
 This tool uses the `huggingface_hub.InferenceClient` API. So you can use all the models that support
