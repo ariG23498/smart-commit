@@ -1,7 +1,7 @@
 [project]
-name = "smart-commit"
+name = "smart-commit-msg"
 version = "0.1.0"
-description = "Add your description here"
+description = "Builds a smart commit message using LLMs"
 readme = "README.md"
 authors = [
     { name = "ariG23498", email = "aritra.born2fly@gmail.com" } 
@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-smart-commit = "smart_commit:main"
+smart-commit-msg = "smart_commit_msg:main"
 
 [build-system]
 requires = ["hatchling"]
